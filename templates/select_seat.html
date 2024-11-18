@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Seat</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Select a Seat</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul>
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Seat Number</th>
+                        <th>Seat Class</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seat in seats %}
+                        <tr>
+                            <td>{{ seat.SeatNumber }}</td>
+                            <td>{{ seat.SeatClass }}</td>
+                            <td>{{ seat.Status }}</td>
+                            <td>{{ price }}</td>
+                            <td>
+                                {% if seat.Status == 'AVAILABLE' %}
+                                    <input type="radio" name="seat" value="{{ seat.SeatID }}">
+                                {% else %}
+                                    <input type="radio" name="seat" value="{{ seat.SeatID }}" disabled>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit">Book Seat</button>
+        </form>
+
+        {% if request.method == 'POST' %}
+            <p><strong>Selected Seat ID: </strong>{{ request.form['seat'] }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

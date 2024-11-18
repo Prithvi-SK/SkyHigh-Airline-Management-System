@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Seats</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h2>{{ flight_details.Source }} to {{ flight_details.Destination }}</h2>
+    <p>Flight ID: {{ flight_details.FlightID }}</p>
+
+    <h3>Available Seats</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Seat Number</th>
+                <th>Class</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seat in seats %}
+            <tr>
+                <td>{{ seat.SeatNumber }}</td>
+                <td>{{ seat.SeatClass }}</td>
+                <td>{{ seat.Status }}</td>
+                <td>{{ class_amount[seat.SeatClass] }}</td>
+                <td>
+                    {% if seat.Status == 'AVAILABLE' %}
+                    <form method="POST" action="{{ url_for('book_seat') }}">
+                        <input type="hidden" name="seat_id" value="{{ seat.SeatID }}">
+                        <input type="hidden" name="flight_id" value="{{ flight_details.FlightID }}">
+                        <input type="hidden" name="seat_class" value="{{ seat.SeatClass }}">
+                        <input type="hidden" name="amount" value="{{ class_amount[seat.SeatClass] }}">
+                        <button type="submit">Book</button>
+                    </form>
+                    {% else %}
+                    <button disabled>Booked</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
